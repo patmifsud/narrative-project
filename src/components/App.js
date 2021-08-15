@@ -1,39 +1,15 @@
 import Game from './Game';
 import Home from './Home';
 import React, { useState, useEffect } from 'react';
-
-// React router dom
-import { Route, BrowserRouter as Router, Link, Switch } from "react-router-dom";
-
-// 🔥 🔥 🔥 TODO - get this all into services/firebase.js
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
-import {userAuthState} from 'react-firebase-hooks/auth';
+import { db } from "../services/firebase";
 import {useCollectionData} from 'react-firebase-hooks/firestore';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAiCtqO51t7aHNQnuyjDCpkmE5ZQzBGXnY",
-  authDomain: "narrative-project-ga.firebaseapp.com",
-  projectId: "narrative-project-ga",
-  storageBucket: "narrative-project-ga.appspot.com",
-  messagingSenderId: "65713869023",
-  appId: "1:65713869023:web:bb8260cfe93a2f5a48996a",
-  measurementId: "G-K7F0H8GX21"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const firestore = firebase.firestore();
-// 🔥 🔥 🔥 END TODO
-
+import { Route, BrowserRouter as Router, Link, Switch } from "react-router-dom";
 
 
 function App() {
 
   // TODO - remove later. Test that firebase is working
-  const testDbData = firestore.collection('testCollection');
+  const testDbData = db.collection('testCollection');
   const [databaseContents] = useCollectionData(testDbData, {idField: 'id'});
   console.log(databaseContents)
   // END Test 
