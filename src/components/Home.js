@@ -1,8 +1,10 @@
 
 function Home() {
   return (
-    <div className="App">
-      <p>Home</p>
+    <div className="App container">
+      <div className="inner">
+         <h1>Home</h1>
+      </div>
     </div>
   );
 }

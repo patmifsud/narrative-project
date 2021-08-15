@@ -1,13 +1,153 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* structure and setup */
+
+/* resets */
+*{box-sizing:border-box; margin:0; padding:0; border:0; outline:0; font-size:100%; vertical-align:baseline; background:transparent;}
+div, .container, .nav, .inner {display: block; }
+body, html{ min-height: 100vh;  background: var(--bgCol2); }
+
+/* variables */
+:root {
+    /* spacers */
+    --sp0:3px;
+    --sp1:5px;
+    --sp2:12px;
+    --sp3:18px;
+    --sp4:25px;
+    --sp5:30px;
+    --sp6:35px;
+    --sp7:55px;
+    --sp8:70px;
+
+
+    /* font size */
+    --fonts1: 30px;
+    --fonts2: 20px;
+    --fonts3: 18px;
+    --fonts4: 16px;
+    --fonts5: 13px;
+    --maxTextWidth:800px;
+    /* color table */
+    --purple1: hsla(274, 17%, 28%, 1);
+    --purple2: hsla(275, 13%, 62%, 1);
+    --yellow1: hsla(47, 100%, 72%, 1);
+    --yellow2: hsla(47, 100%, 90%, 1);
+    --blue1: hsla(230, 34%, 71%, 1);
+    --blue2: hsla(230, 23%, 92%, 1);
+    --blue3: hsla(230, 42%, 98%, 1);
+    /* interface colors */
+    --mainCol: var(--purple1);
+    --bgCol: white;
+    --bgCol2: var(--blue3);
+    /*Misc*/
+    --borderRad:var(--sp3);
+  }
+
+/* ------------------------- */
+/* structure */
+.container{
+    padding:var(--sp4) var(--sp5);
+    background-color: var(--bgCol);
+    width: 100%;
+}
+    .inner{
+        margin:0 auto;
+        width:100%;
+        max-width: 1000px;
+    }
+
+.nav{
+    position:fixed;
+    display: flex;
+    width:100%;
+    background: var(--bgCol);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.main{
+  padding-top:85px;
+  height:100%;
+}
+
+
+p, h1, h2, h3, h4, h5, a, sub, label, .inner{
+  color: var(--mainCol);     
+  font-family: Public Sans, Helvetica, Arial, sans-serif;
+  line-height:130%;
+}
+
+
+
+h1{
+  font-size: var(--fonts1);
+  font-weight:800;
+}
+
+h2{
+  font-size: var(--fonts1);
+  font-weight:500;
+}
+
+h3{
+  font-size: var(--fonts2);
+}
+
+h4, h5{
+  font-size: var(--fonts4);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+h5{
+  color: var(--purple2);     
+}
+
+p{
+  font-size:var(--fonts5);
+}
+
+small{
+  font-size:var(--fonts5);
+  color: var(--purple2);     
+}
+
+a{
+  text-decoration: none;
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+*::selection{
+  background-color: var(--yellow1);
+}
+
+*::placeholder{
+  color: var(--purple2);     
+}
+
+ul, ol{
+  text-indent: 0;
+  padding-left: 1em;
+}
+
+.underline{
+  border-bottom: 2px solid var(--yellow1);
+}
+
+li{
+  padding: var(--sp1) 0;
+}
+
+li::marker{
+color:var(--purple2);
+}
+
+
+
+.bold{
+  font-weight: 800;
+}
+
+.mono{
+  font-family: monospace;
 }
