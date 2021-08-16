@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'react-router';
+
+// import {useCollectionData} from 'react-firebase-hooks/firestore';
+// import { db } from "../services/firebase";
+
 import {rules} from '../helpers/rules.js';
-import { db } from "../services/firebase";
 import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, RevealFinalScore} from "./gamePhases/allPhases";
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+
 
 
 function Game() {
@@ -88,6 +91,8 @@ function Game() {
       // (local game phase should change automically once server is updated fingers crossed)
    }
 
+
+   // ᐧ GET URL SLUG
    // gets the game id from the url once on load 
    useEffect(() => {
       // check if urlslug = gameid in server
@@ -96,7 +101,8 @@ function Game() {
       // Create user here? 
    }, []);
 
-   // Are all players ready? 
+
+   // ᐧ CHECK IF ALL PLAYERS ARE READY (when state is updated) 
    useEffect(() => {
       if (playerIsHost) {
          // TO DO: replace with 'if all players in firebase ready = true'
@@ -108,25 +114,29 @@ function Game() {
 
 
    return (
-      <div className="App container">
-         <div className="inner">
-         <h1>Game</h1>
+      <div>
+         <div className="container">
+            <div className="inner">
+               <h1>Game</h1>
+            </div>
          </div>
-         <div className="inner">
-            <h5>TEST PANNEL</h5>
-            <a onClick={() => {setTestAllPlayersReady(true)}}> Set all players to ready </a>
-            <a onClick={() => {handleSubmitOrTimeout()}}> Set me to ready </a>
-            <p>Game id is {gameId}</p>
-            <p>Current phase: {phase}</p>
-            <p>Round: {roundCounter} / {rules.gameLength} </p>
-            <p>Player is host: { playerIsHost ? "✅" : "❌"}</p>
-            <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>
-            <p>All players ready: { testAllPlayersReady ? "✅" : "❌" }</p>
-            <hr />
-         </div>
-
+            
          {phaseTable[phase].component}
 
+         <div className="container">
+            <div className="inner">
+               <h5>🪛 TEST PANNEL</h5>
+               <button onClick={() => {handleSubmitOrTimeout()
+                                       setTestAllPlayersReady(true)}}> Set all players to ready </button>
+               <button onClick={() => {handleSubmitOrTimeout()}}> Set me to ready </button>
+               <p>Game id is {gameId}</p>
+               <p>Current phase: {phase}</p>
+               <p>Round: {roundCounter} / {rules.gameLength} </p>
+               <p>Player is host: { playerIsHost ? "✅" : "❌"}</p>
+               <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>
+               <p>All players ready: { testAllPlayersReady ? "✅" : "❌" }</p>
+            </div>
+         </div>
       </div>
    );
  }
