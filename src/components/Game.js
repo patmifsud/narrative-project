@@ -7,50 +7,123 @@ import {useCollectionData} from 'react-firebase-hooks/firestore';
 
 
 function Game() {
-   // States
-   const [gameId, setGameId] = useState('')
-   const [phase, setPhase] = useState('Intro')
+   //--------------------------
+   // STATES
+      const [gameId, setGameId] = useState('')
+      const [phase, setPhase] = useState('Intro')
+
+      // Temporary or may be moved elsewhere
+      const [playerIsHost, setPlayerIsHost] = useState(true)
+      const [playerIsReady, setPlayerIsReady] = useState(false)
+      
+      // 100% just for testing, will be replaced
+      const [testAllPlayersReady, setTestAllPlayersReady] = useState(false)
 
 
-   // list of game phases
+   //--------------------------
+   // Non-state variables
+   // deadman switch - timer increments while players aren't ready, if reaches 50 game is killed
+   let gameTimeOutLimit = 0
+
+   // urlSlug
+   const urlSlug = useLocation().pathname.split("/").pop()
+
+
+   // list of game phases and game phase components
    const phaseTable = {
-      'Intro': <Intro />,
-      'Lobby': <Lobby />,
-      'WriteSentence': <WriteSentence />,
-      'VoteSentence': <VoteSentence />,
-      'RevealSentence': <RevealSentence />,
-      'RevealScore': <RevealScore />,
-      'RevealFinalSentence': <RevealFinalSentence />,
-      'RevealFinalScore': <RevealFinalScore />,
+      'Intro': <Intro onCompletion={handleSubmitOrTimeout} />,
+      'Lobby': <Lobby onCompletion={handleSubmitOrTimeout}/>,
+      'WriteSentence': <WriteSentence onCompletion={handleSubmitOrTimeout}/>,
+      'VoteSentence': <VoteSentence onCompletion={handleSubmitOrTimeout}/>,
+      'RevealSentence': <RevealSentence onCompletion={handleSubmitOrTimeout}/>,
+      'RevealScore': <RevealScore onCompletion={handleSubmitOrTimeout}/>,
+      'RevealFinalSentence': <RevealFinalSentence onCompletion={handleSubmitOrTimeout}/>,
+      'RevealFinalScore': <RevealFinalScore onCompletion={handleSubmitOrTimeout}/>,
    }
-   
-   // Slug
-   const slug = useLocation().pathname.split("/").pop()
 
-   // check db for match with slug
-   function isSlugAGameId(){}
+   //--------------------------
+   // FUNCTIONS: Initalse game
+
+   // check db for match with urlSlug
+   function isurlSlugAGameId(){
+
+   }
 
    // if match load and display data from db
 
    // if not, or if blank, load component that says: 'no game id' or similar
 
    // funciton to update phase state of component based on state of game obj in db
-   
+      
 
+
+   //--------------------------
+   // FUNCTIONS: GAME PLAY
+
+   function checkIfAllPlayersReady(){
+      // TODO: will check all players within game obj in database for ready = true
+      // if one or more isn't ready, returns false
+      return testAllPlayersReady
+   }
+
+   function handleSubmitOrTimeout(){
+      setPlayerIsReady(true);
+      // TODO: sync player readyness with firebase
+      if (playerIsHost) {
+         listenForAllPlayersReady()
+      }
+   }
+
+   function listenForAllPlayersReady() {
+      if (checkIfAllPlayersReady){
+         console.log("all players ready");
+         // TO DO set phase to next phase
+         gameTimeOutLimit = 0
+         return
+      } 
+      if (gameTimeOutLimit == 50){
+         alert("Your game has timed out, please create a new game and try again");
+         // TO DO send back to home/ cancel game. Maybe break out into different funciton and trigger from somehwere else
+         return
+      }
+      setTimeout(checkIfAllPlayersReady, 1000);
+   }
+
+   function nextGamePhase() {
+      // show loading animation
+      // get current game phase from firebase
+      // const of next game phase
+      // update game phase state in server
+      // (local game phase should change automically once server is updated fingers crossed)
+   }
+
+
+   // gets the game id from the url after a short delay
    useEffect(() => {
-      if (slug !== 'game') setGameId(slug)
-      else return <Redirect to='/' />
-    }, []);
+      // check if urlslug = gameid in server
+      if (urlSlug !== 'game') setGameId(urlSlug)
+      // else load component 404
+   }, []);
 
    return (
 
    <div className="App container">
       <div className="inner">
        <h1>Game</h1>
-       <p>Game id is {gameId}</p>
-       <p>Change state in browser to see this change: </p>
-       {phaseTable[phase]}
-     </div>
+      </div>
+      <div className="inner">
+         <h5>TEST PANNEL</h5>
+         <a onClick={() => {setTestAllPlayersReady(true)}}> Set all players to ready </a>
+         <a onClick={() => {setPlayerIsReady(true)}}> Set me to ready </a>
+         <p>Game id is {gameId}</p>
+         <p>Current phase: {phase}</p>
+         <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>
+         <p>All players ready: { testAllPlayersReady ? "✅" : "❌" }</p>
+         <hr />
+      </div>
+
+      {phaseTable[phase]}
+      
    </div>
    );
  }

@@ -53,6 +53,7 @@ body, html{ min-height: 100vh;  background: var(--bgCol2); }
         margin:0 auto;
         width:100%;
         max-width: 1000px;
+        padding: var(--sp2);
     }
 
 .nav{
@@ -111,6 +112,9 @@ small{
 
 a{
   text-decoration: none;
+  cursor: pointer;
+  background: var(--bgCol2);
+  margin:0 var(--sp0);
 }
 
 a:hover{
