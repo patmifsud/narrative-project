@@ -5,10 +5,12 @@ import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, 
 import {useCollectionData} from 'react-firebase-hooks/firestore';
 
 
+
 function Game() {
    // States
    const [gameId, setGameId] = useState('')
    const [phase, setPhase] = useState('Intro')
+
 
    // list of game phases
    const phaseTable = {
@@ -32,6 +34,9 @@ function Game() {
 
    // if not, or if blank, load component that says: 'no game id' or similar
 
+   // funciton to update phase state of component based on state of game obj in db
+   
+
    useEffect(() => {
       if (slug !== 'game') setGameId(slug)
       else return <Redirect to='/' />
@@ -42,7 +47,7 @@ function Game() {
    <div className="App container">
       <div className="inner">
        <h1>Game</h1>
-       <p>Game id might be {slug}{gameId}</p>
+       <p>Game id is {gameId}</p>
        <p>Change state in browser to see this change: </p>
        {phaseTable[phase]}
      </div>
