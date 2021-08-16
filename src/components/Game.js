@@ -18,11 +18,11 @@ function Game() {
       // Temporary or may be moved elsewhere
       const [playerIsHost, setPlayerIsHost] = useState(true)
       const [playerIsReady, setPlayerIsReady] = useState(false)
+      const [story, setStory] = useState({})
 
       // 100% just for testing, will be replaced in firebase or similar
       const [testAllPlayersReady, setTestAllPlayersReady] = useState(false)
       const [roundCounter, setroundCounter] = useState(1)
-
 
    //--------------------------
    // Non-state variables
