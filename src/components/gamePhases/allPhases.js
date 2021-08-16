@@ -8,7 +8,6 @@ import WriteSentence from './WriteSentence';
 import VoteSentence from './VoteSentence'; 
 import RevealSentence from './RevealSentence';
 import RevealScore from './RevealScore';
-import RevealFinalSentence from './RevealFinalSentence';
 import RevealFinalScore from './RevealFinalScore';
 
 export {
@@ -18,6 +17,5 @@ export {
    VoteSentence, 
    RevealSentence, 
    RevealScore, 
-   RevealFinalSentence, 
    RevealFinalScore
 };

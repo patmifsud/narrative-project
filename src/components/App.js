@@ -42,7 +42,7 @@ function App() {
         <div className="inner">
           <h3>List of data in the Db:</h3>
           <p>{ databaseContents && databaseContents.map( cont =>
-               <li> {cont.name} </li> )}
+               <li key={cont.id}> {cont.name} </li> )}
           </p>
         </div>
       </div>
