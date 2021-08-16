@@ -2,6 +2,7 @@ import React from 'react'
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+
 import 'firebase/auth';
 import {userAuthState} from 'react-firebase-hooks/auth';
 
@@ -16,7 +17,6 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 
 export const auth = firebase.auth;
 export const db = firebase.firestore();
