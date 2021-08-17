@@ -3,7 +3,7 @@ function RevealSentence() {
    return (
       <div className="revealSentence container">
          <div className="inner">
-          <h3>Showing: RevealSentence</h3>
+          <h4>Showing: RevealSentence</h4>
         </div>
       </div>
       );

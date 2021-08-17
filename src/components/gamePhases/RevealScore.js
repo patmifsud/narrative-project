@@ -3,7 +3,7 @@ function RevealScore() {
    return (
       <div className="revealScore container">
          <div className="inner">
-          <h3>Showing: RevealScore</h3>
+          <h4>Showing: RevealScore</h4>
         </div>
       </div>
       );

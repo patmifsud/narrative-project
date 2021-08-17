@@ -3,26 +3,28 @@ import { useLocation, Redirect } from 'react-router';
 
 // import {useCollectionData} from 'react-firebase-hooks/firestore';
 // import { db } from "../services/firebase";
-
+// import { db } from "../services/firebase";
 import {rules} from '../helpers/rules.js';
 import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, RevealFinalScore} from "./gamePhases/allPhases";
-
-
 
 function Game() {
    //--------------------------
    // STATES
       const [gameId, setGameId] = useState('')
-      const [phase, setPhase] = useState('Intro')
+      const [phase, setPhase] = useState('Lobby')
 
       // Temporary or may be moved elsewhere
       const [playerIsHost, setPlayerIsHost] = useState(true)
       const [playerIsReady, setPlayerIsReady] = useState(false)
-      const [story, setStory] = useState({})
+      const [playerRole, setPlayerRole] = useState('writer')
+
+      const [sentences, setSentences] = useState([])
+      const [story, setStory] = useState([])
 
       // 100% just for testing, will be replaced in firebase or similar
       const [testAllPlayersReady, setTestAllPlayersReady] = useState(false)
       const [roundCounter, setroundCounter] = useState(1)
+
 
    //--------------------------
    // Non-state variables
@@ -36,12 +38,23 @@ function Game() {
    const phaseTable = {
       'Lobby': {'component': <Lobby onCompletion={handleSubmitOrTimeout}/>, 'next': 'Intro' },
       'Intro': {'component': <Intro onCompletion={handleSubmitOrTimeout} />, 'next': 'WriteSentence' },
-      'WriteSentence': {'component': <WriteSentence onCompletion={handleSubmitOrTimeout}/>, 'next': 'VoteSentence' },
-      'VoteSentence': {'component': <VoteSentence onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
-      'RevealSentence': {'component': <RevealSentence onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealScore' },
-      'RevealScore': {'component': <RevealScore onCompletion={handleSubmitOrTimeout}/>, 'next': 'WriteSentence' }, // <- loops
+      'WriteSentence': {'component': <WriteSentence story={story} submitTo={setSentences} onCompletion={handleSubmitOrTimeout}/>, 'next': 'VoteSentence' },
+      'VoteSentence': {'component': <VoteSentence story={story} chooseFrom={sentences} submitTo={setStory} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
+      'RevealSentence': {'component': <RevealSentence story={story}  clear={setSentences} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealScore' },
+      'RevealScore': {'component': <RevealScore story={story} onCompletion={handleSubmitOrTimeout}/>, 'next': 'WriteSentence' }, // <- loops
       'RevealFinalScore': {'component': <RevealFinalScore onCompletion={handleSubmitOrTimeout}/>, 'next': 'Lobby' }
    }
+
+   //--------------------------
+   // Classes (Later?)
+   class Sentence {
+      constructor(text, user, round) {
+         this.text = text;
+         this.user = user;
+         this.round = round;
+      }
+   }
+
 
 
    //--------------------------
@@ -70,6 +83,15 @@ function Game() {
       // TODO: sync player readyness with firebase
    }
 
+   function cyclePlayerRoles(){
+      if  (playerIsHost) {
+      // TODO
+      // Temp code for testing
+         if (playerRole == 'writer') setPlayerRole('editor');
+         if (playerRole == 'editor') setPlayerRole('writer');
+      }
+   }
+
    function nextGamePhase() {
       console.log('next game phase')
       // show loading animation
@@ -78,6 +100,7 @@ function Game() {
       // update game phase state in server
       if (phase == 'RevealScore'){
          setroundCounter(roundCounter + 1)
+         cyclePlayerRoles();
          if (roundCounter >= rules.gameLength){
             setPhase('RevealFinalScore');
             return 
@@ -92,6 +115,13 @@ function Game() {
    }
 
 
+   // ᐧ SEED DATA - TEMP
+   // gets the game id from the url once on load 
+   useEffect(() => {
+      setStory([new Sentence('Once apon a time', {name: 'James'}, (parseInt(roundCounter))), new Sentence('a frog fell into a lorem ispum, and that caused ', {name: 'Fred'}, (parseInt(roundCounter))), new Sentence('pat to have difficulty thinking of seed text for this placeholder story', {name: 'May'}, (parseInt(roundCounter)))])
+      console.log(story)
+   }, []);
+   
    // ᐧ GET URL SLUG
    // gets the game id from the url once on load 
    useEffect(() => {
@@ -117,7 +147,7 @@ function Game() {
       <div>
          <div className="container">
             <div className="inner">
-               <h1>Game</h1>
+               <h5>Game</h5>
             </div>
          </div>
             

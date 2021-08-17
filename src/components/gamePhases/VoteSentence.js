@@ -3,7 +3,7 @@ function VoteSentence() {
    return (
       <div className="voteSentence container">
          <div className="inner">
-          <h3>Showing: VoteSentence</h3>
+          <h4>Showing: VoteSentence</h4>
         </div>
       </div>
       );

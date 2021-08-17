@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+// import Sentence from '..../helpers/globals.js';
 import SentenceInputForm from '../ui/SentenceInputForm'; 
-
+import Story from '../ui/Story'; 
 
 function WriteSentence(props) {
 
@@ -8,20 +9,22 @@ function WriteSentence(props) {
     console.log('handleTextEntry called')
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (props) => {
     console.log('handlesubmit called')
     props.onCompletion();
   };
   
-   return (
-      <div className="writeSentence container">
-         <div className="inner">
-          <SentenceInputForm 
-            onChange={handleTextEntry}
-            onSubmit={handleSubmit}/>
-        </div>
+  return (
+    <div className="writeSentence container">
+      <h4>WriteSentence</h4>
+        <div className="inner">
+        <Story content={props.story}/>
+        <SentenceInputForm 
+          onChange={handleTextEntry}
+          onSubmit={handleSubmit}/>
       </div>
-      );
-    }
+    </div>
+    );
+  }
 
 export default WriteSentence;

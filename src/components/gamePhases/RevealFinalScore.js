@@ -3,7 +3,7 @@ function RevealFinalScore() {
    return (
       <div className="revealFinalScore container">
          <div className="inner">
-          <h3>Showing: RevealFinalScore</h3>
+          <h4>RevealFinalScore</h4>
         </div>
       </div>
       );

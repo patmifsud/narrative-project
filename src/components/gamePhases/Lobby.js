@@ -3,7 +3,7 @@ function Lobby() {
    return (
       <div className="lobby container">
          <div className="inner">
-          <h3>Showing: Lobby</h3>
+          <h4>Lobby</h4>
         </div>
       </div>
       );
