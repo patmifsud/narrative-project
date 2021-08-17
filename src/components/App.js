@@ -7,13 +7,6 @@ import { Route, BrowserRouter as Router, Link, Switch } from "react-router-dom";
 
 
 function App() {
-
-  // TODO - remove later. Test that firebase is working
-  const testDbData = db.collection('testCollection');
-  const [databaseContents] = useCollectionData(testDbData, {idField: 'id'});
-  console.log(databaseContents)
-  // END Test 
-
   return (
     <div className="App">
       <Router>

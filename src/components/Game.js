@@ -48,9 +48,9 @@ function Game() {
    //--------------------------
    // Classes (Later?)
    class Sentence {
-      constructor(text, user, round) {
+      constructor(text, username, round) {
          this.text = text;
-         this.user = user;
+         this.username = username;
          this.round = round;
       }
    }
@@ -126,10 +126,10 @@ function Game() {
 
    // ᐧ SEED DATA - TEMP
    // gets the game id from the url once on load
-   // useEffect(() => {
-   //    setStory([new Sentence('Once apon a time', {name: 'James'}, (parseInt(roundCounter))), new Sentence('a frog fell into a lorem ispum, and that caused ', {name: 'Fred'}, (parseInt(roundCounter))), new Sentence('pat to have difficulty thinking of seed text for this placeholder story', {name: 'May'}, (parseInt(roundCounter)))])
-   //    console.log(story)
-   // }, []);
+   useEffect(() => {
+      setStory([new Sentence('Once apon a time', 'James', (parseInt(roundCounter))), new Sentence('a frog fell into a lorem ispum, and that caused ', 'Fred', (parseInt(roundCounter))), new Sentence('pat to have difficulty thinking of seed text for this placeholder story', 'May', (parseInt(roundCounter)))])
+      console.log(story)
+   }, []);
 
    // GAME Setup from FIREBASE
    useEffect(() => {

@@ -4,13 +4,20 @@ import SentenceInputForm from '../ui/SentenceInputForm';
 import Story from '../ui/Story'; 
 
 function WriteSentence(props) {
+  const [localSentence, setLocalSentence] = useState('')
 
-  function handleTextEntry(){
+  console.log(props.story)
+
+
+  function handleTextEntry(e){
     console.log('handleTextEntry called')
+    console.log('e is equal to ' + e.value)
+
   }
 
   const handleSubmit = (props) => {
     console.log('handlesubmit called')
+    props.submitTo()
     props.onCompletion();
   };
   
@@ -18,7 +25,7 @@ function WriteSentence(props) {
     <div className="writeSentence container">
       <h4>WriteSentence</h4>
         <div className="inner">
-        <Story content={props.story}/>
+        <Story story={props.story}/>
         <SentenceInputForm 
           onChange={handleTextEntry}
           onSubmit={handleSubmit}/>

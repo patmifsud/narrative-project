@@ -1,10 +1,13 @@
-function Story(props) {
+import React from 'react';
+import Sentence from './Sentence';
 
-   console.log(props.story)
+function Story(props) {
 
    return (
       <div className="story">
-         {/* {props.story.map } */}
+         {props.story.map( sentence =>  
+           <Sentence content={sentence}/>
+         )}
       </div>
       );
     }
