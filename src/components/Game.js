@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'react-router';
+import { db, auth } from '../services/firebase'
 
 // import {useCollectionData} from 'react-firebase-hooks/firestore';
-// import { db } from "../services/firebase";
 // import { db } from "../services/firebase";
 import {rules} from '../helpers/rules.js';
 import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, RevealFinalScore} from "./gamePhases/allPhases";
@@ -67,7 +67,7 @@ function Game() {
    // if not, or if blank, load component that says: 'no game id' or similar
 
    // funciton to update phase state of component based on state of game obj in db
-      
+
 
    //--------------------------
    // FUNCTIONS: GAME PLAY
@@ -103,9 +103,9 @@ function Game() {
          cyclePlayerRoles();
          if (roundCounter >= rules.gameLength){
             setPhase('RevealFinalScore');
-            return 
+            return
          }
-      } 
+      }
       console.log("looks like everyones ready, so setting the game phase to:" + phaseTable[phase].next)
       setPlayerIsReady(false)
       setTestAllPlayersReady(false)
@@ -114,25 +114,42 @@ function Game() {
       // (local game phase should change automically once server is updated fingers crossed)
    }
 
-
-   // ᐧ SEED DATA - TEMP
-   // gets the game id from the url once on load 
-   useEffect(() => {
-      setStory([new Sentence('Once apon a time', {name: 'James'}, (parseInt(roundCounter))), new Sentence('a frog fell into a lorem ispum, and that caused ', {name: 'Fred'}, (parseInt(roundCounter))), new Sentence('pat to have difficulty thinking of seed text for this placeholder story', {name: 'May'}, (parseInt(roundCounter)))])
-      console.log(story)
-   }, []);
-   
    // ᐧ GET URL SLUG
-   // gets the game id from the url once on load 
+   // gets the game id from the url once on load
    useEffect(() => {
       // check if urlslug = gameid in server
       if (urlSlug !== 'game') setGameId(urlSlug)
       // else load component 404
-      // Create user here? 
+      // Create user here?
    }, []);
 
 
-   // ᐧ CHECK IF ALL PLAYERS ARE READY (when state is updated) 
+   // ᐧ SEED DATA - TEMP
+   // gets the game id from the url once on load
+   // useEffect(() => {
+   //    setStory([new Sentence('Once apon a time', {name: 'James'}, (parseInt(roundCounter))), new Sentence('a frog fell into a lorem ispum, and that caused ', {name: 'Fred'}, (parseInt(roundCounter))), new Sentence('pat to have difficulty thinking of seed text for this placeholder story', {name: 'May'}, (parseInt(roundCounter)))])
+   //    console.log(story)
+   // }, []);
+
+   // GAME Setup from FIREBASE
+   useEffect(() => {
+    // if (urlSlug !== 'game') setGameId(urlSlug)
+    console.log(gameId);
+    db.collection('games').doc('pqi96').onSnapshot(snapshot => {
+
+      console.log('Snapshot Data: ',snapshot.data());
+
+      // const [userDetails, setUserDetails] = useState('')
+      // db.collection('users').doc(id).get()
+      // .then(snapshot => setUserDetails(snapshot.data()))
+
+    })
+  }, [])
+
+
+
+
+   // ᐧ CHECK IF ALL PLAYERS ARE READY (when state is updated)
    useEffect(() => {
       if (playerIsHost) {
          // TO DO: replace with 'if all players in firebase ready = true'
@@ -150,7 +167,7 @@ function Game() {
                <h5>Game</h5>
             </div>
          </div>
-            
+
          {phaseTable[phase].component}
 
          <div className="container">
