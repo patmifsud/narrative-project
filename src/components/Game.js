@@ -134,16 +134,17 @@ function Game() {
    // GAME Setup from FIREBASE
    useEffect(() => {
     // if (urlSlug !== 'game') setGameId(urlSlug)
-    console.log(gameId);
-    db.collection('games').doc('pqi96').onSnapshot(snapshot => {
+    if (urlSlug) {
+      console.log(urlSlug)
+      db.collection('games').doc(urlSlug).onSnapshot(snapshot => {
 
       console.log('Snapshot Data: ',snapshot.data());
 
-      // const [userDetails, setUserDetails] = useState('')
-      // db.collection('users').doc(id).get()
-      // .then(snapshot => setUserDetails(snapshot.data()))
-
-    })
+         // const [userDetails, setUserDetails] = useState('')
+         // db.collection('users').doc(id).get()
+         // .then(snapshot => setUserDetails(snapshot.data()))
+         })
+      }
   }, [])
 
 
