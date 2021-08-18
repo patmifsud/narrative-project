@@ -1,5 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { db } from '../services/firebase'
+import { motion } from "framer-motion"
 import firebase from 'firebase'
 
 
@@ -40,6 +41,7 @@ function Home() {
          // players: [{uid:1 ,  }],
          // sentences: [{ text: "Pizza", uid: 1, round: 1 }],
          // story: [{ text: "1st Text", uid: 1, round: 1 }],
+         winningSentence: '',
          roundCounter: 1,
          phase: 'Lobby',
          createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -61,8 +63,10 @@ function Home() {
   return (
     <div className="App container">
       <div className="inner">
+      <motion.div animate={{ scale: [0.1, 1] }} transition={{ duration: 1 }}>
          <h1>Home</h1>
          <button onClick={_startButtonHandler}> Create a game </button>
+      </motion.div>
       </div>
     </div>
   );

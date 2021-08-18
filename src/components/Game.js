@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from "framer-motion"
 import { useLocation, Redirect } from 'react-router';
 import { db, auth } from '../services/firebase'
 
@@ -15,6 +16,7 @@ function Game() {
       const [player, setPlayer] = useState({name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
       const [sentences, setSentences] = useState([])
       const [story, setStory] = useState([])
+      const [winningSentence, setWinningSentence] = useState([])
 
       // 100% just for testing, will be replaced in firebase or similar
       const [roundCounter, setroundCounter] = useState(1)
@@ -27,10 +29,10 @@ function Game() {
    const phaseTable = {
       'Lobby': {'component': <Lobby onCompletion={handleSubmitOrTimeout} players={players}/>, 'next': 'Intro' },
       'Intro': {'component': <Intro onCompletion={handleSubmitOrTimeout} />, 'next': 'WriteSentence' },
-      'WriteSentence': {'component': <WriteSentence story={story} submitTo={dbAddSentance} onCompletion={handleSubmitOrTimeout} player={player}/>, 'next': 'VoteSentence' },
-      'VoteSentence': {'component': <VoteSentence story={story} chooseFrom={sentences} submitTo={dbAddStory} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
-      'RevealSentence': {'component': <RevealSentence story={story}  clear={dbClearSentances} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealScore' },
-      'RevealScore': {'component': <RevealScore story={story} onCompletion={handleSubmitOrTimeout}/>, 'next': 'WriteSentence' }, // <- loops
+      'WriteSentence': {'component': <WriteSentence story={story} dbSetWinningSentence={dbSetWinningSentence} handleSubmitOrTimeout={handleSubmitOrTimeout} player={player}/>, 'next': 'VoteSentence' },
+      'VoteSentence': {'component': <VoteSentence story={story} story={story} chooseFrom={sentences} dbSetWinningSentence={dbSetWinningSentence} handleSubmitOrTimeout={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
+      'RevealSentence': {'component': <RevealSentence onCompletion={handleSubmitOrTimeout} winningSentence={winningSentence} sentences={sentences} player={player}/>, 'next': 'RevealScore' },
+      'RevealScore': {'component': <RevealScore story={story} handleSubmitOrTimeout={handleSubmitOrTimeout} dbSetWinningSentence={dbSetWinningSentence } clearSentences={dbClearSentances} />, 'next': 'WriteSentence' }, // <- loops
       'RevealFinalScore': {'component': <RevealFinalScore onCompletion={handleSubmitOrTimeout}/>, 'next': 'Lobby' }
    }
 
@@ -53,7 +55,9 @@ function Game() {
       // 📅 🔥 update 'phase' in game state when 'phase' changes in db
       db.collection('games').doc(gameId).onSnapshot(snapshot => {
          setPhase(snapshot.data().phase)
+         setWinningSentence(snapshot.data().winningSentence)
       })
+
 
       // 📖 🔥 update 'story' in game state when 'story' changes in db
       db.collection('games').doc(gameId).collection('story').onSnapshot(function(querySnapshot) {
@@ -97,6 +101,10 @@ function Game() {
          } else console.log('no players yet');
       })
    }, [gameId])
+
+   
+
+   
 
 
    //--------------------------
@@ -146,6 +154,13 @@ function Game() {
      })
    }
 
+   function dbSetWinningSentence(sentenceParam){
+      dbCollectionGame.update({'winningSentence' : sentenceParam})
+   }
+
+
+
+
    // MOVE TO NEXT PHASE 
    // when players state changes (pulled from db) check if all are ready. 
    // If admin && if ready set db to next phase
@@ -169,7 +184,7 @@ function Game() {
 
    function checkIfAllPlayersReady(){
       for (let i = 0; i < players.length; i++) {
-       if (players[i].ready != true) return false
+       if (players[i].ready !== true) return false
       } 
       return true
    }

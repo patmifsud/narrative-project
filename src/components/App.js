@@ -1,8 +1,6 @@
 import Game from './Game';
 import Home from './Home';
-import React, { useState, useEffect } from 'react';
-import { db } from "../services/firebase";
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+import React from 'react';
 import { Route, BrowserRouter as Router, Link, Switch } from "react-router-dom";
 
 
