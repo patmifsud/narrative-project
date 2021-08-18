@@ -6,7 +6,6 @@ import firebase from 'firebase'
 function Home() {
    const history = useHistory();
 
-
 //   function signInWithGoogle(){
 //     const provider = new firebase.auth.GoogleAuthProvider()
 //     auth.signInWithPopup(provider)

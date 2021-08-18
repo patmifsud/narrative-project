@@ -10,7 +10,7 @@ function Game() {
    //--------------------------
    // STATES
 
-      const [phase, setPhase] = useState('Lobby')
+      const [phase, setPhase] = useState('Intro')
       const [players, setPlayers] = useState([])
       const [player, setPlayer] = useState({name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
       const [sentences, setSentences] = useState([])
@@ -20,16 +20,16 @@ function Game() {
       const [roundCounter, setroundCounter] = useState(1)
 
    // gameId
-   const gameId = useLocation().pathname.split("/").pop()
+   let gameId = useLocation().pathname.split("/").pop()
 
 
    // list of game phases and game phase components
    const phaseTable = {
       'Lobby': {'component': <Lobby onCompletion={handleSubmitOrTimeout}/>, 'next': 'Intro' },
       'Intro': {'component': <Intro onCompletion={handleSubmitOrTimeout} />, 'next': 'WriteSentence' },
-      'WriteSentence': {'component': <WriteSentence story={story} submitTo={setSentences} onCompletion={handleSubmitOrTimeout} player={player}/>, 'next': 'VoteSentence' },
-      'VoteSentence': {'component': <VoteSentence story={story} chooseFrom={sentences} submitTo={setStory} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
-      'RevealSentence': {'component': <RevealSentence story={story}  clear={setSentences} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealScore' },
+      'WriteSentence': {'component': <WriteSentence story={story} submitTo={dbAddSentance} onCompletion={handleSubmitOrTimeout} player={player}/>, 'next': 'VoteSentence' },
+      'VoteSentence': {'component': <VoteSentence story={story} chooseFrom={sentences} submitTo={dbAddStory} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
+      'RevealSentence': {'component': <RevealSentence story={story}  clear={dbClearSentances} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealScore' },
       'RevealScore': {'component': <RevealScore story={story} onCompletion={handleSubmitOrTimeout}/>, 'next': 'WriteSentence' }, // <- loops
       'RevealFinalScore': {'component': <RevealFinalScore onCompletion={handleSubmitOrTimeout}/>, 'next': 'Lobby' }
    }
@@ -67,6 +67,18 @@ function Game() {
             } else console.log('no stories yet');
       })
 
+      // 📖 🔥 update 'sentence' in game state when 'story' changes in db
+            db.collection('games').doc(gameId).collection('sentence').onSnapshot(function(querySnapshot) {
+               let allSentences = []
+               if (querySnapshot.docs.length > 0) {
+                  querySnapshot.docs.forEach(doc => {
+                     allSentences.push(doc.data())
+                  })
+                  setSentences(allSentences)
+                  console.log(' '); console.log("Getting new sentences from DB:"); console.log(allSentences);
+               } else console.log('no sentences yet');
+      })
+
       // 👤 🔥 update 'player' data in game state when 'player' changes in db
       db.collection('games').doc(gameId).collection('players').onSnapshot(function(querySnapshot) {
          let allPlayers = []
@@ -78,7 +90,6 @@ function Game() {
             console.log(' '); console.log("Getting new players from DB:"); console.log(allPlayers);
          } else console.log('no players yet');
       })
-
    }, [gameId])
 
 
@@ -109,6 +120,23 @@ function Game() {
 
    function dbCyclePlayerRoles(){
       //will do later
+   }
+
+   
+   function dbAddSentance(data){
+      dbCollectionGame.collection('sentences').doc().set({'text' : data.text, 'userid' : data.userid, 'username' : data.username})
+   }
+
+   function dbAddStory(data){
+      dbCollectionGame.collection('story').doc().set({'text' : data.text, 'userid' : data.userid, 'username' : data.username})
+   }
+
+   function dbClearSentances(){
+      dbCollectionGame.collection('sentences').listDocuments().then(val => {
+         val.map((val) => {
+             val.delete()
+         })
+     })
    }
 
    // MOVE TO NEXT PHASE 
@@ -166,9 +194,6 @@ function Game() {
 
          {phaseTable[phase].component}
 
-
-
-
          {/* Test pannel. TODO - environment var in netlify - show only on local */}
          <div className="container">
             <div className="inner">
@@ -193,6 +218,7 @@ function Game() {
                   name: "Mark", score: 0, isArbitrator: false, ready: false, isHost: false, id:2})}}> 
                      Add/ reset player 3 
                </button>
+               <button onClick={() => {gameId = gameId ; console.log(gameId)}}>Resync firebase</button>
                </div>
                {/* <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>
                <p>All players ready: { testAllPlayersReady ? "✅" : "❌" }</p> */}

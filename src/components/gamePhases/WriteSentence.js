@@ -5,18 +5,17 @@ import Story from '../ui/Story';
 
 function WriteSentence(props) {
   const [localSentence, setLocalSentence] = useState('')
-  console.log("props 2:");
-  console.log(props);
 
-  function handleTextEntry(e){
-
+  function handleTextEntry(text){
+    setLocalSentence(text)
   }
 
   // send submition from child SentenceInputForm to 'Sentences' in db
-  function handleSubmit(content){
+  function handleSubmit(){
+    console.log(localSentence)
     props.submitTo({
-      'text': content, 
-      'uid': props.player.id, 
+      'text': localSentence, 
+      'userid': props.player.id, 
       'username': props.player.name })
     props.onCompletion();
   };
