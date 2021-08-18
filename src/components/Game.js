@@ -25,7 +25,7 @@ function Game() {
 
    // list of game phases and game phase components
    const phaseTable = {
-      'Lobby': {'component': <Lobby onCompletion={handleSubmitOrTimeout}/>, 'next': 'Intro' },
+      'Lobby': {'component': <Lobby onCompletion={handleSubmitOrTimeout} players={players}/>, 'next': 'Intro' },
       'Intro': {'component': <Intro onCompletion={handleSubmitOrTimeout} />, 'next': 'WriteSentence' },
       'WriteSentence': {'component': <WriteSentence story={story} submitTo={dbAddSentance} onCompletion={handleSubmitOrTimeout} player={player}/>, 'next': 'VoteSentence' },
       'VoteSentence': {'component': <VoteSentence story={story} chooseFrom={sentences} submitTo={dbAddStory} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
@@ -58,35 +58,41 @@ function Game() {
       // 📖 🔥 update 'story' in game state when 'story' changes in db
       db.collection('games').doc(gameId).collection('story').onSnapshot(function(querySnapshot) {
             let allStories = []
+            //Get stories from Firebase
             if (querySnapshot.docs.length > 0) {
                querySnapshot.docs.forEach(doc => {
                   allStories.push(doc.data())
                })
+               //Set stories from fb as current state
                setStory(allStories)
                console.log(' '); console.log("Getting new stories from DB:"); console.log(allStories);
             } else console.log('no stories yet');
       })
 
       // 📖 🔥 update 'sentence' in game state when 'story' changes in db
-            db.collection('games').doc(gameId).collection('sentence').onSnapshot(function(querySnapshot) {
-               let allSentences = []
-               if (querySnapshot.docs.length > 0) {
-                  querySnapshot.docs.forEach(doc => {
-                     allSentences.push(doc.data())
-                  })
-                  setSentences(allSentences)
-                  console.log(' '); console.log("Getting new sentences from DB:"); console.log(allSentences);
-               } else console.log('no sentences yet');
+         db.collection('games').doc(gameId).collection('sentences').onSnapshot(function(querySnapshot) {
+            let allSentences = []
+            //Get sentences from Firebase
+            if (querySnapshot.docs.length > 0) {
+               querySnapshot.docs.forEach(doc => {
+                  allSentences.push(doc.data())
+               })
+               //Set sentences from fb as current state
+               setSentences(allSentences)
+               console.log(' '); console.log("Getting new sentences from DB:"); console.log(allSentences);
+            } else console.log('no sentences yet');
       })
 
       // 👤 🔥 update 'player' data in game state when 'player' changes in db
       db.collection('games').doc(gameId).collection('players').onSnapshot(function(querySnapshot) {
          let allPlayers = []
+         //Get players from Firebase
          if (querySnapshot.docs.length > 0) {
             querySnapshot.docs.forEach(doc => {
                allPlayers.push(doc.data())
             })
-            setPlayers(allPlayers)
+            //Set players from fb as current state
+            setPlayers(allPlayers) 
             console.log(' '); console.log("Getting new players from DB:"); console.log(allPlayers);
          } else console.log('no players yet');
       })
@@ -105,7 +111,8 @@ function Game() {
 
    function dbSetAllPlayersReadyTo(bool){
       for (let i = 0; i < players.length; i++) {
-         const playerId = (player.id).toString()
+         const playerId = (players[i].id).toString()
+
          dbCollectionPlayers.doc(playerId).update({'ready': bool})
       } 
    }
@@ -145,10 +152,10 @@ function Game() {
    useEffect(() => {
       if (player.isHost) {
          console.log(checkIfAllPlayersReady())
-
-         if (checkIfAllPlayersReady()){
-            hostNextGamePhase()
-            return
+         if (players.length > 0){
+            if (checkIfAllPlayersReady()){
+               hostNextGamePhase()
+         }
    }}}, [players]);
 
 
@@ -218,7 +225,6 @@ function Game() {
                   name: "Mark", score: 0, isArbitrator: false, ready: false, isHost: false, id:2})}}> 
                      Add/ reset player 3 
                </button>
-               <button onClick={() => {gameId = gameId ; console.log(gameId)}}>Resync firebase</button>
                </div>
                {/* <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>
                <p>All players ready: { testAllPlayersReady ? "✅" : "❌" }</p> */}
