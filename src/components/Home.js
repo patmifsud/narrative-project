@@ -41,6 +41,7 @@ function Home() {
          // players: [{uid:1 ,  }],
          // sentences: [{ text: "Pizza", uid: 1, round: 1 }],
          // story: [{ text: "1st Text", uid: 1, round: 1 }],
+         roundCounter: 1,
          phase: 'Intro',
          createdAt: firebase.firestore.FieldValue.serverTimestamp()
       })
@@ -51,7 +52,7 @@ function Home() {
          text: "1st Text", uid: 1, round: 1 
       })
       db.collection("games").doc(gc).collection('sentences').doc('0').set({
-         text: "Pizza", uid: 1, username: "frank", round: 1 
+         text: "Once apon a time:", uid: 1, username: "frank", round: 1 
       })
       // hacky way to add first user
       db.collection("games").doc(gc).collection('players').doc('0').set({

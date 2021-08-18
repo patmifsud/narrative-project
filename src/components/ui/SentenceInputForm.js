@@ -21,7 +21,7 @@ function SentenceInputForm(props) {
 //    )
 //  }
 
-   return (
+   return ( 
          <div className=" ">
             <form onSubmit={handleSubmitLocal}>
                <textarea name="sentence" onChange={props.onChange} placeholder="What happens next?" />

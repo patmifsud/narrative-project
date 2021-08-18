@@ -10,8 +10,8 @@ import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, 
 function Game() {
    //--------------------------
    // STATES
-      const [gameId, setGameId] = useState('')
       const [phase, setPhase] = useState('Lobby')
+      const [players, setPlayers] = useState([])
 
       // Temporary or may be moved elsewhere
       const [playerIsHost, setPlayerIsHost] = useState(true)
@@ -25,14 +25,8 @@ function Game() {
       const [testAllPlayersReady, setTestAllPlayersReady] = useState(false)
       const [roundCounter, setroundCounter] = useState(1)
 
-
-   //--------------------------
-   // Non-state variables
-   // deadman switch - timer increments while players aren't ready, if reaches 50 game is killed
-   let gameTimeOutLimit = 0
-
-   // urlSlug
-   const urlSlug = useLocation().pathname.split("/").pop()
+   // gameId
+   const gameId = useLocation().pathname.split("/").pop()
 
    // list of game phases and game phase components
    const phaseTable = {
@@ -46,21 +40,9 @@ function Game() {
    }
 
    //--------------------------
-   // Classes (Later?)
-   class Sentence {
-      constructor(text, username, round) {
-         this.text = text;
-         this.username = username;
-         this.round = round;
-      }
-   }
-
-
-
-   //--------------------------
    // FUNCTIONS: Initalse game
 
-   // check db for match with urlSlug
+   // check db for match with gameId
 
    // if match load and display data from db
 
@@ -92,7 +74,7 @@ function Game() {
       }
    }
 
-   function nextGamePhase() {
+   function hostNextGamePhase() {
       console.log('next game phase')
       // show loading animation
       // get current game phase from firebase
@@ -110,44 +92,40 @@ function Game() {
       setPlayerIsReady(false)
       setTestAllPlayersReady(false)
       setPhase(phaseTable[phase].next)
-
       // (local game phase should change automically once server is updated fingers crossed)
    }
 
-   // ᐧ GET URL SLUG
-   // gets the game id from the url once on load
+   // 🔥🔥🔥 FIREBASE
    useEffect(() => {
-      // check if urlslug = gameid in server
-      if (urlSlug !== 'game') setGameId(urlSlug)
-      // else load component 404
-      // Create user here?
-   }, []);
+      // 📅 🔥 update phase in game state when phase changes in db
+      db.collection('games').doc(gameId).onSnapshot(snapshot => {
+         setPhase(snapshot.data().phase)
+      })
 
+      // 📖 🔥 update story in game state when story changes in db
+      db.collection('games').doc(gameId).collection('story').onSnapshot(function(querySnapshot) {
+            let allStories = []
+            if (querySnapshot.docs.length > 0) {
+               querySnapshot.docs.forEach(doc => {
+                  allStories.push(doc.data())
+               })
+               setStory(allStories)
+               console.log(' '); console.log("Getting new stories from DB:"); console.log(allStories);
+            } else console.log('no stories yet');
+      })
 
-   // ᐧ SEED DATA - TEMP
-   // gets the game id from the url once on load
-   useEffect(() => {
-      setStory([new Sentence('Once apon a time', 'James', (parseInt(roundCounter))), new Sentence('a frog fell into a lorem ispum, and that caused ', 'Fred', (parseInt(roundCounter))), new Sentence('pat to have difficulty thinking of seed text for this placeholder story', 'May', (parseInt(roundCounter)))])
-      console.log(story)
-   }, []);
-
-   // GAME Setup from FIREBASE
-   useEffect(() => {
-    // if (urlSlug !== 'game') setGameId(urlSlug)
-    if (urlSlug) {
-      console.log(urlSlug)
-      db.collection('games').doc(urlSlug).onSnapshot(snapshot => {
-
-      console.log('Snapshot Data: ',snapshot.data());
-
-         // const [userDetails, setUserDetails] = useState('')
-         // db.collection('users').doc(id).get()
-         // .then(snapshot => setUserDetails(snapshot.data()))
-         })
-      }
-  }, [])
-
-
+      // 👤 🔥 update player data in game state when story changes in db
+      db.collection('games').doc(gameId).collection('players').onSnapshot(function(querySnapshot) {
+         let allPlayers = []
+         if (querySnapshot.docs.length > 0) {
+            querySnapshot.docs.forEach(doc => {
+               allPlayers.push(doc.data())
+            })
+            setPlayers(allPlayers)
+            console.log(' '); console.log("Getting new players from DB:"); console.log(allPlayers);
+         } else console.log('no players yet');
+      })
+  }, [gameId])
 
 
    // ᐧ CHECK IF ALL PLAYERS ARE READY (when state is updated)
@@ -155,11 +133,10 @@ function Game() {
       if (playerIsHost) {
          // TO DO: replace with 'if all players in firebase ready = true'
          if (testAllPlayersReady){
-            nextGamePhase()
+            hostNextGamePhase()
             return
    }}}, [testAllPlayersReady]);
    // TO DO:  replace ^ 'testAllPlayersReady' with something that checks firebase for any user being ready, or any change to game obj
-
 
    return (
       <div>
