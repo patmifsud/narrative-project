@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'react-router';
 import { db, auth } from '../services/firebase'
-import firestore from 'firebase/app'
 
 import {rules} from '../helpers/rules.js';
 import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, RevealFinalScore} from "./gamePhases/allPhases";
@@ -105,6 +104,8 @@ function Game() {
       } 
    }
 
+
+
    function dbSetPhaseTo(phaseParam){
       dbCollectionGame.update({'phase' : phaseParam})
    }
@@ -162,7 +163,6 @@ function Game() {
       }
    }
 
-
    return (
       <div>
          <div className="container">
@@ -173,18 +173,36 @@ function Game() {
 
          {phaseTable[phase].component}
 
+
+
+
+         {/* Test pannel. TODO - environment var in netlify - show only on local */}
          <div className="container">
             <div className="inner">
-               <h5>🪛 TEST PANNEL</h5>
-               <button onClick={() => {dbSetAllPlayersReadyTo(true)}}> Set all players to ready </button>
-               <button onClick={() => {handleSubmitOrTimeout()}}> Set me to ready </button>
-               <button onClick={() => {setPlayers([... players, {name: "June", score: 0, isArbitrator: false, ready: false, isHost: false, id:1} ])}}> Add player 2 </button>
-               <button onClick={() => {setPlayers([... players, {name: "Mark", score: 0, isArbitrator: false, ready: false, isHost: false, id:2} ])}}> Add player 3 </button>
-               <p>Game id is {gameId}</p>
-               <p>Current phase: {phase}</p>
-               <p>Round: {roundCounter} / {rules.gameLength} </p>
-               <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>
-               <p>All players ready: { testAllPlayersReady ? "✅" : "❌" }</p>
+               <h5>TEST PANNEL</h5>
+               <br/>
+               <p><b>Game id</b> is {gameId}</p>
+               <p><b>Current phase:</b> {phase}</p>
+               <p><b>Round:</b> {roundCounter} / {rules.gameLength} </p>
+               <br/>
+               <div>
+                  <button className="medium"  onClick={() => {dbSetAllPlayersReadyTo(true)}}> Set all players to ready </button> &nbsp;
+                  <button className="medium"  onClick={() => {handleSubmitOrTimeout()}}> Set me to ready </button>
+               </div>
+
+               <div>
+               <button className="medium"  onClick={() => {db.collection("games").doc(gameId).collection('players').doc('1').set({
+                  name: "Joe", score: 0, isArbitrator: false, ready: false, isHost: false, id:1})}}> 
+                     Add/ reset player 2 
+               </button> &nbsp;
+
+               <button className="medium" onClick={() => {db.collection("games").doc(gameId).collection('players').doc('2').set({
+                  name: "Mark", score: 0, isArbitrator: false, ready: false, isHost: false, id:2})}}> 
+                     Add/ reset player 3 
+               </button>
+               </div>
+               {/* <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>
+               <p>All players ready: { testAllPlayersReady ? "✅" : "❌" }</p> */}
             </div>
          </div>
       </div>

@@ -201,9 +201,9 @@ button, input[type=submit], .button{
   }
 
   .button.medium, button.medium{
-    font-size: var( --fonts3);
-    padding: var( --sp2) var(--sp6);
-    margin: var( --sp3) 0;
+    font-size: var( --fonts4);
+    padding: var( --sp2) var(--sp4);
+    margin: var( --sp2) 0;
   }
   
 
