@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 // import Sentence from '..../helpers/globals.js';
 import SentenceInputForm from '../ui/SentenceInputForm'; 
 import Story from '../ui/Story'; 
 
 function WriteSentence(props) {
   const [localSentence, setLocalSentence] = useState('')
-
-  console.log(props.story)
-
+  console.log("props 2:");
+  console.log(props);
 
   function handleTextEntry(e){
-    console.log('handleTextEntry called')
-    console.log('e is equal to ' + e.value)
 
   }
 
-  const handleSubmit = (props) => {
-    console.log('handlesubmit called')
-    props.submitTo()
+  // send submition from child SentenceInputForm to 'Sentences' in db
+  function handleSubmit(content){
+    props.submitTo({
+      'text': content, 
+      'uid': props.player.id, 
+      'username': props.player.name })
     props.onCompletion();
   };
   

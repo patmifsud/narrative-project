@@ -1,30 +1,26 @@
+import React, { useState } from 'react';
 
 function SentenceInputForm(props) {
+   console.log('props')
+   console.log(props)
+   const [input, setInput] = useState(' ')
 
    // only way to prevent default is to have a local funciton from what i can see
    function handleSubmitLocal(event){
       event.preventDefault();
-      props.onSubmit();
+      props.onSubmit(input);
    }
 
 
-//   _handleChange(event) {
-//    this.setState({content: event.target.value});
-//  }
 
-//  render() {
-//    return (
-//      <form onSubmit={ this._handleSubmit }>
-//        <textarea onChange={ this._handleChange } value={ this.state.content }></textarea>
-//        <input type="submit" value="Tell" />
-//      </form>
-//    )
-//  }
+   function handleChange(event) {
+      setInput(event.target.value);
+   }
 
    return ( 
          <div className=" ">
             <form onSubmit={handleSubmitLocal}>
-               <textarea name="sentence" onChange={props.onChange} placeholder="What happens next?" />
+               <textarea name="sentence" onChange={handleChange} value={input} placeholder="What happens next?" />
                <input type="submit" value="Submit!" />
             </form>
          </div>

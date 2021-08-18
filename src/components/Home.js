@@ -49,19 +49,14 @@ function Home() {
       // later i think we can remove the .doc onwards to just create the collections
       // adding a story collection
       db.collection("games").doc(gc).collection('story').doc('0').set({
-         text: "1st Text", uid: 1, round: 1 
+         text: "Once apon a time:", uid: 1, username: "frank", round: 1 
       })
       db.collection("games").doc(gc).collection('sentences').doc('0').set({
          text: "Once apon a time:", uid: 1, username: "frank", round: 1 
       })
       // hacky way to add first user
       db.collection("games").doc(gc).collection('players').doc('0').set({
-         name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true
-      })
-      // adding a second user for now
-      db.collection("games").doc(gc).collection('players').doc('0').set({
-         name: "Joe", score: 0, isArbitrator: true, ready: false, isHost: true
-      })
+         name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
    }
 
   return (
