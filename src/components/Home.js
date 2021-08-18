@@ -42,7 +42,7 @@ function Home() {
          // sentences: [{ text: "Pizza", uid: 1, round: 1 }],
          // story: [{ text: "1st Text", uid: 1, round: 1 }],
          roundCounter: 1,
-         phase: 'Intro',
+         phase: 'Lobby',
          createdAt: firebase.firestore.FieldValue.serverTimestamp()
       })
       //SEED DATA

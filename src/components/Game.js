@@ -9,6 +9,7 @@ import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, 
 function Game() {
    //--------------------------
    // STATES
+
       const [phase, setPhase] = useState('Lobby')
       const [players, setPlayers] = useState([])
       const [player, setPlayer] = useState({name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
@@ -97,8 +98,6 @@ function Game() {
          dbCollectionPlayers.doc(playerId).update({'ready': bool})
       } 
    }
-
-
 
    function dbSetPhaseTo(phaseParam){
       dbCollectionGame.update({'phase' : phaseParam})
