@@ -12,16 +12,10 @@ function Game() {
       const [phase, setPhase] = useState('Lobby')
       const [players, setPlayers] = useState([])
       const [player, setPlayer] = useState({name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
-
-      // Temporary or may be moved elsewhere
-      const [playerIsReady, setPlayerIsReady] = useState(false)
-      const [playerRole, setPlayerRole] = useState('writer')
-
       const [sentences, setSentences] = useState([])
       const [story, setStory] = useState([])
 
       // 100% just for testing, will be replaced in firebase or similar
-      const [testAllPlayersReady, setTestAllPlayersReady] = useState(false)
       const [roundCounter, setroundCounter] = useState(1)
 
    // gameId
