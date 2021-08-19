@@ -220,11 +220,11 @@ function Game() {
   }
 
   function dbAddSentance(data) {
-      if (data.text == null){
-         dbCollectionGame.collection("sentences").doc()
-            .set({ text: "and then, out of nowhere, there was an error in the game 😔", postition: player, username: "Error" }
-         );
-      } else {
+      // if (data.text == null){
+      //    dbCollectionGame.collection("sentences").doc()
+      //       .set({ text: "and then, out of nowhere, there was an error in the game 😔", postition: player, username: "Error" }
+      //    );
+      // } else {
          console.log("GAME: about to add a SENTENCE during" + phase)
          console.log({text: data.text, postition: player, username: data.username})
          console.log(" ")
@@ -233,14 +233,14 @@ function Game() {
             .set({ text: data.text, postition: player, username: data.username }
          );
       }
-  }
+  
   
 
   function dbAddStory(data) {
-      if (data.text == null){
-         dbCollectionGame.collection("story").doc()
-            .set({ text: "and then, out of nowhere, there was an error in the game 😔", postition: player, username: "Error" });
-      } else {
+      // if (data.text == null){
+      //    dbCollectionGame.collection("story").doc()
+      //       .set({ text: "and then, out of nowhere, there was an error in the game 😔", postition: player, username: "Error" });
+      // } else {
          console.log("GAME: about to add a STORY during" + phase)
          console.log({text: data.text, postition: player, username: data.username})
          console.log(" ")
@@ -248,7 +248,7 @@ function Game() {
          dbCollectionGame.collection("story").doc()
             .set({ text: data.text, postition: player, username: data.username });
       }
-   }
+   
    
 
   function dbClearSentances() {
@@ -318,8 +318,6 @@ function Game() {
     <div className="game">
       {phaseTable[phase].component}
       <Bar />
-
-
 
       {/* Test pannel. TODO - environment var in netlify - show only on local */}
       <div className="container">

@@ -2,10 +2,6 @@ import React, { useEffect } from 'react';
 // import { motion } from "framer-motion"
 import {PhaseBanner} from '../ui/gameUi'; 
 
-let roundOfLastDbUpdate = 0
-
-
-
 // story={story}
 // players={players}
 // player={players[player]}
@@ -22,25 +18,23 @@ let roundOfLastDbUpdate = 0
 function RevealScore(props) {
   // const player = props.players[props.player]
   useEffect(() => {
-    if (!props.player.isHost){
-      props.setReadyAfter(3000)
-    }
+      props.setReadyAfter(4000)
   }, []);
 
   useEffect(() => {
-    if (props.player === null){ return }
-    console.log(props.roundCoutner)
-
-    if (props.player.isHost && roundOfLastDbUpdate < props.roundCoutner){
+    if (props.player === null){ console.log("it's null"); return }
+    console.log(props.roundCounter)
+    console.log(props.player.isHost)
+    if (props.player.isHost){
       console.log('updating...')
           props.dbAddStory(props.winningSentence)
           props.dbCyclePlayerRoles()
           props.dbSetRoundCounterTo()
           props.dbSetWinningSentence(' ')
           props.clearSentences(' ')
-          // roundOfLastDbUpdate = props.roundCoutner
+          // roundOfLastDbUpdate = props.roundCounter
     }
-   }, [props.players]);
+   }, []);
 
    return (
       <div className="revealScore phase">
