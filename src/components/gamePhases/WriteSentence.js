@@ -13,11 +13,11 @@ function WriteSentence(props) {
   // send submition from child SentenceInputForm to 'Sentences' in db
   function handleSubmit(){
     console.log(localSentence)
-    props.submitTo({
+    props.dbAddSentance({
       'text': localSentence, 
-      'userid': props.player.id, 
-      'username': props.player.name })
-    props.onCompletion();
+      'userid': props.player, 
+      'username': 'gerry' })
+    props.handleSubmitOrTimeout();
   };
   
   return (

@@ -3,11 +3,11 @@ import { motion } from "framer-motion"
 
 function RevealSentence(props) {
 
-useEffect(() => {
-    if (props.player.isHost) {
+// useEffect(() => {
+//     if (props.player.isHost) {
       
-      //award winning player points?
- }}, []);
+//       //award winning player points?
+//  }}, []);
 
 
    return (

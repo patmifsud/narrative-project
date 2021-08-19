@@ -3,11 +3,11 @@ import { motion } from "framer-motion"
 
 function RevealScore(props) {
 
-  useEffect(() => {
-    if (props.player.isHost) {
-      props.clearSentences()
-      props.dbSetWinningSentence()
- }}, []);
+//   useEffect(() => {
+//     if (props.player.isHost) {
+//       props.clearSentences()
+//       props.dbSetWinningSentence()
+//  }}, []);
 
    return (
       <div className="revealScore container">

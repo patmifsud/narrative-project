@@ -19,7 +19,7 @@ function App() {
 
         <Switch>
             {/* React dom routes. Slug is game id, read in game component */}
-            <Route path="/play/:slug" component={Game}/>
+            <Route path="/play/:slug" component={Game }/>
             <Home path="/" exact component={Home}/>
         </Switch>
       </Router>

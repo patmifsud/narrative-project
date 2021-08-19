@@ -46,6 +46,13 @@ function Home() {
          phase: 'Lobby',
          createdAt: firebase.firestore.FieldValue.serverTimestamp()
       })
+
+      // during create game if user is not signed in 
+      // 
+
+
+
+
       //SEED DATA
       // later i think we can remove the .doc onwards to just create the collections
       // adding a story collection
