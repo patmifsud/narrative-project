@@ -50,12 +50,12 @@ function Home() {
       //SEED DATA
       // later i think we can remove the .doc onwards to just create the collections
       // adding a story collection
-      await db.collection("games").doc(gameCode).collection('story').doc('0').set({
-         text: "Once apon a time:", postition: 1, username: "frank", round: 1 
-      })
-      await db.collection("games").doc(gameCode).collection('sentences').doc('0').set({
-         text: "Once apon a time:", postition: 1, username: "frank", round: 1 
-      })
+      // await db.collection("games").doc(gameCode).collection('story').doc('0').set({
+      //    text: "Once apon a time:", postition: 1, username: "frank", round: 1 
+      // })
+      // await db.collection("games").doc(gameCode).collection('sentences').doc('0').set({
+      //    text: "Once apon a time:", postition: 1, username: "frank", round: 1 
+      // })
       // hacky way to add first user
       await db.collection("games").doc(gameCode).collection('players').doc('0').set({
          name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, postition:0, playerId:0})

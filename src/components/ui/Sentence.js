@@ -1,7 +1,4 @@
 function Sentence(props) {
-
-   console.log(props.content.postition)
-
    return (
       <div className={`sentence pl${props.content.postition}`}>
          <div className="username">{props.content.username}</div>
@@ -9,7 +6,5 @@ function Sentence(props) {
       </div>
       );
     }
-
-
 
 export default Sentence;

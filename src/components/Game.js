@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useLocation, Redirect } from "react-router";
-import { db, auth } from "../services/firebase";
+// import { motion } from "framer-motion";
+import { useLocation } from "react-router";
+import { db } from "../services/firebase";
 
 import { rules } from "../helpers/rules.js";
 import {
@@ -25,14 +25,11 @@ function Game() {
   // STATES
   const [phase, setPhase] = useState("Loading");
   const [players, setPlayers] = useState([]);
-  const [player, setPlayer] = useState(0); //rename to player position
-  // const [player, setPlayer] = useState({name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
+  const [player ] = useState(0); //rename to player position?
   const [sentences, setSentences] = useState([]);
   const [story, setStory] = useState([]);
   const [winningSentence, setWinningSentence] = useState([]);
-
-  // 100% just for testing, will be replaced in firebase or similar
-  const [roundCounter, setroundCounter] = useState(1);
+  const [roundCounter, setRoundCounter] = useState(1);
 
   //--------------------------
   // PHASES
@@ -46,6 +43,7 @@ function Game() {
         <Lobby
          players={players}
          position={player}
+         gameId={gameId}
 
          onCompletion={handleSubmitOrTimeout}
         />
@@ -109,6 +107,7 @@ function Game() {
           players={players}
           player={players[player]}
           winningSentence={winningSentence}
+          roundCounter={roundCounter}
 
           setReadyAfter={setReadyAfter}
           dbCyclePlayerRoles={dbCyclePlayerRoles}
@@ -130,25 +129,9 @@ function Game() {
     },
   };
 
-
-  //--------------------------
-  // FUNCTIONS: Initalse game
-  // When you land on this page and it's phase = lobby -
-  // Check if there are any users?
-
-  // check db for match with gameId
-
-  // if match load and display data from db
-
-  // if not, or if blank, load component that says: 'no game id' or similar
-
-  // funciton to update phase state of component based on state of game obj in db
-
   //--------------------------
   // 🔥 FIREBASE GET - AUTO UPDATE COMPONENT STATES when db changes:
   useEffect(() => {
-    console.log("game id");
-    console.log(gameId);
 
     // 📅 🔥 update 'phase' in game state when 'phase' changes in db
     db.collection("games")
@@ -171,7 +154,7 @@ function Game() {
           });
           //Set stories from fb as current state
           setStory(allStories);
-        } else console.log("no stories yet");
+        }
       });
 
     // 📖 🔥 update 'sentence' in game state when 'story' changes in db
@@ -187,7 +170,7 @@ function Game() {
           });
           //Set sentences from fb as current state
           setSentences(allSentences);
-        } else console.log("no sentences yet");
+        }
       });
 
     // 👤 🔥 update 'player' data in game state when 'player' changes in db
@@ -242,22 +225,31 @@ function Game() {
             .set({ text: "and then, out of nowhere, there was an error in the game 😔", postition: player, username: "Error" }
          );
       } else {
+         console.log("GAME: about to add a SENTENCE during" + phase)
+         console.log({text: data.text, postition: player, username: data.username})
+         console.log(" ")
+
          dbCollectionGame.collection("sentences").doc()
             .set({ text: data.text, postition: player, username: data.username }
          );
       }
   }
+  
 
   function dbAddStory(data) {
-     console.log(data.text)
       if (data.text == null){
          dbCollectionGame.collection("story").doc()
             .set({ text: "and then, out of nowhere, there was an error in the game 😔", postition: player, username: "Error" });
       } else {
+         console.log("GAME: about to add a STORY during" + phase)
+         console.log({text: data.text, postition: player, username: data.username})
+         console.log(" ")
+
          dbCollectionGame.collection("story").doc()
             .set({ text: data.text, postition: player, username: data.username });
       }
    }
+   
 
   function dbClearSentances() {
       dbCollectionGame.collection("sentences")
@@ -277,7 +269,7 @@ function Game() {
   // when players state changes (pulled from db) check if all are ready.
   // If admin && if ready set db to next phase
   useEffect(() => {
-    if (players.length > 0) {
+    if (players.length > 0 && players[player]) {
       if (players[player].isHost) {
         if (checkIfAllPlayersReady()) {
           hostNextGamePhase();

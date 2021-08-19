@@ -8,7 +8,7 @@ function Story(props) {
          <div className="inner">
             <div className="story">
                {props.story.map( sentence =>  
-               <Sentence content={sentence}/>
+               <Sentence key={Math.random().toString(36).substr(2, 5)} content={sentence}/>
                )}
             </div>
          </div>

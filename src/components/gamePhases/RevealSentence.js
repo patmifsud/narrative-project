@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from "framer-motion"
-import {PhaseBanner} from '../ui/gameUi'; 
+// import {PhaseBanner} from '../ui/gameUi'; 
 
 function RevealSentence(props) {
 

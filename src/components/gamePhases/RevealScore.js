@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from "framer-motion"
+import React, { useEffect } from 'react';
+// import { motion } from "framer-motion"
 import {PhaseBanner} from '../ui/gameUi'; 
+
+let roundOfLastDbUpdate = 0
+
+
 
 // story={story}
 // players={players}
@@ -18,22 +22,23 @@ import {PhaseBanner} from '../ui/gameUi';
 function RevealScore(props) {
   // const player = props.players[props.player]
   useEffect(() => {
-    props.setReadyAfter(3000)
+    if (!props.player.isHost){
+      props.setReadyAfter(3000)
+    }
   }, []);
-
-  let setDbAlready = false
 
   useEffect(() => {
     if (props.player === null){ return }
-    // if the player is the host and hasn't already done this (isn't ready, which is the last action of this function)
-    if (props.player.isHost && setDbAlready === false) {
-      console.log(props.winningSentence)
-      props.dbAddStory(props.winningSentence)
-      props.dbCyclePlayerRoles()
-      props.dbSetRoundCounterTo()
-      props.dbSetWinningSentence(' ')
-      props.clearSentences(' ')
-      setDbAlready = true
+    console.log(props.roundCoutner)
+
+    if (props.player.isHost && roundOfLastDbUpdate < props.roundCoutner){
+      console.log('updating...')
+          props.dbAddStory(props.winningSentence)
+          props.dbCyclePlayerRoles()
+          props.dbSetRoundCounterTo()
+          props.dbSetWinningSentence(' ')
+          props.clearSentences(' ')
+          // roundOfLastDbUpdate = props.roundCoutner
     }
    }, [props.players]);
 
