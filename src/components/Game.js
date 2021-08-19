@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'react-router';
-import { db, auth } from '../services/firebase'
+import { db, auth } from '../services/firebase.js'
+import {useAuthState} from 'react-firebase-hooks/auth'
 
 import {rules} from '../helpers/rules.js';
 import {Intro, Lobby, WriteSentence, VoteSentence, RevealSentence, RevealScore, RevealFinalScore} from "./gamePhases/allPhases";
 
+import { v4 as uuidv4 } from 'uuid'
+
 
 function Game() {
+  const gameId = useLocation().pathname.split("/").pop()
+  const [user] = useAuthState(auth)
+
    //--------------------------
    // STATES
-
       const [phase, setPhase] = useState('Intro')
       const [players, setPlayers] = useState([])
-      const [player, setPlayer] = useState({name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
+      const [player, setPlayer] = useState('')
       const [sentences, setSentences] = useState([])
       const [story, setStory] = useState([])
 
       // 100% just for testing, will be replaced in firebase or similar
       const [roundCounter, setroundCounter] = useState(1)
 
-   // gameId
-   let gameId = useLocation().pathname.split("/").pop()
+
 
 
    // list of game phases and game phase components
    const phaseTable = {
-      'Lobby': {'component': <Lobby onCompletion={handleSubmitOrTimeout} players={players}/>, 'next': 'Intro' },
+      'Lobby': {'component': <Lobby onCompletion={handleSubmitOrTimeout} players={players} player={player} gameId={gameId}/>, 'next': 'Intro' },
       'Intro': {'component': <Intro onCompletion={handleSubmitOrTimeout} />, 'next': 'WriteSentence' },
       'WriteSentence': {'component': <WriteSentence story={story} submitTo={dbAddSentance} onCompletion={handleSubmitOrTimeout} player={player}/>, 'next': 'VoteSentence' },
       'VoteSentence': {'component': <VoteSentence story={story} chooseFrom={sentences} submitTo={dbAddStory} onCompletion={handleSubmitOrTimeout}/>, 'next': 'RevealSentence' },
@@ -33,6 +37,34 @@ function Game() {
       'RevealScore': {'component': <RevealScore story={story} onCompletion={handleSubmitOrTimeout}/>, 'next': 'WriteSentence' }, // <- loops
       'RevealFinalScore': {'component': <RevealFinalScore onCompletion={handleSubmitOrTimeout}/>, 'next': 'Lobby' }
    }
+
+
+   function createPlayerId() {
+     const uuid =  uuidv4()
+     console.log("UUID: ",uuid);
+     return uuid
+   }
+
+   // if user is not anoymous get auth.uid otherwie generate a uuid
+   useEffect(() => {
+     console.log('Game LS UID: ',localStorage.getItem("uid"))
+     let pid = ''
+    if(localStorage.getItem("uid") === null){
+      pid = createPlayerId()
+        console.log('Game LS UID: ',pid)
+     setPlayer(pid)
+     localStorage.setItem("uid", pid)
+
+   } else setPlayer(localStorage.getItem("uid"))
+    // console.log('onCompMount: ',uid);
+   }, [])
+
+   // useEffect(() => {
+   //   if(!user){
+   //     setPlayer(createPlayerId())
+   //   }
+   // }, [player])
+
 
    //--------------------------
    // FUNCTIONS: Initalse game
@@ -92,7 +124,7 @@ function Game() {
                allPlayers.push(doc.data())
             })
             //Set players from fb as current state
-            setPlayers(allPlayers) 
+            setPlayers(allPlayers)
             console.log(' '); console.log("Getting new players from DB:"); console.log(allPlayers);
          } else console.log('no players yet');
       })
@@ -114,7 +146,7 @@ function Game() {
          const playerId = (players[i].id).toString()
 
          dbCollectionPlayers.doc(playerId).update({'ready': bool})
-      } 
+      }
    }
 
    function dbSetPhaseTo(phaseParam){
@@ -129,7 +161,7 @@ function Game() {
       //will do later
    }
 
-   
+
    function dbAddSentance(data){
       dbCollectionGame.collection('sentences').doc().set({'text' : data.text, 'userid' : data.userid, 'username' : data.username})
    }
@@ -146,17 +178,16 @@ function Game() {
      })
    }
 
-   // MOVE TO NEXT PHASE 
-   // when players state changes (pulled from db) check if all are ready. 
+   // MOVE TO NEXT PHASE
+   // when players state changes (pulled from db) check if all are ready.
    // If admin && if ready set db to next phase
    useEffect(() => {
-      if (player.isHost) {
-         console.log(checkIfAllPlayersReady())
-         if (players.length > 0){
-            if (checkIfAllPlayersReady()){
-               hostNextGamePhase()
-         }
-   }}}, [players]);
+     if (players.length > 0 && players[player]) {
+     if (players[player].isHost) {
+       if (checkIfAllPlayersReady()) {
+         hostNextGamePhase();
+       }}}
+    }, [players]);
 
 
 
@@ -170,7 +201,7 @@ function Game() {
    function checkIfAllPlayersReady(){
       for (let i = 0; i < players.length; i++) {
        if (players[i].ready != true) return false
-      } 
+      }
       return true
    }
 
@@ -217,13 +248,13 @@ function Game() {
 
                <div>
                <button className="medium"  onClick={() => {db.collection("games").doc(gameId).collection('players').doc('1').set({
-                  name: "Joe", score: 0, isArbitrator: false, ready: false, isHost: false, id:1})}}> 
-                     Add/ reset player 2 
+                  name: "Joe", score: 0, isArbitrator: false, ready: false, isHost: false, id:1})}}>
+                     Add/ reset player 2
                </button> &nbsp;
 
                <button className="medium" onClick={() => {db.collection("games").doc(gameId).collection('players').doc('2').set({
-                  name: "Mark", score: 0, isArbitrator: false, ready: false, isHost: false, id:2})}}> 
-                     Add/ reset player 3 
+                  name: "Mark", score: 0, isArbitrator: false, ready: false, isHost: false, id:2})}}>
+                     Add/ reset player 3
                </button>
                </div>
                {/* <p>Current player ready: { playerIsReady ? "✅" : "❌"}</p>

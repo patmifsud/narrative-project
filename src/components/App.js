@@ -7,6 +7,7 @@ import { Route, BrowserRouter as Router, Link, Switch } from "react-router-dom";
 
 
 function App() {
+  
   return (
     <div className="App">
       <Router>
@@ -15,7 +16,7 @@ function App() {
           <div className="container">
             <div className="inner">
               <Link to="/">Home</Link> | <Link to="/play">Game</Link>
-            </div>  
+            </div>
           </div>
           {/* END TODO  */}
 

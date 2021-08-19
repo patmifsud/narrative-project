@@ -1,10 +1,44 @@
 import { useHistory } from "react-router-dom";
-import { db } from '../services/firebase'
 import firebase from 'firebase'
+
+import { db, auth } from '../services/firebase.js'
+import {useAuthState} from 'react-firebase-hooks/auth'
+import { useState, useEffect} from 'react'
+
+
+import Signin from './Signin'
+import Signout from './Signout'
 
 
 function Home() {
-   const history = useHistory();
+   const history = useHistory()
+   const [user] = useAuthState(auth)
+
+   const [userId, setUserId] = useState('')
+   const [userPhoto, setUserPhoto] = useState('')
+   const [userName, setUserName] = useState('')
+
+   useEffect(() => {
+     const u = localStorage.getItem("uid")
+     const p = localStorage.getItem("photo")
+     const n = localStorage.getItem("name")
+     setUserId(u)
+     setUserPhoto(p)
+     setUserName(n)
+   }, [])
+
+   useEffect(() => {
+     // console.log(user);
+     if (user) {
+        const { uid , photoURL , displayName } = user //auth.currentUser
+        setUserId(uid)
+        setUserPhoto(photoURL)
+        setUserName(displayName)
+        localStorage.setItem("uid", uid)
+        localStorage.setItem("photo", photoURL)
+        localStorage.setItem("name", displayName)
+     }
+   }, [user])
 
 //   function signInWithGoogle(){
 //     const provider = new firebase.auth.GoogleAuthProvider()
@@ -17,7 +51,7 @@ function Home() {
       // check if the user is logged in
          // if not signInWithGoogle()
 
-      // if they are logged in, 
+      // if they are logged in,
 
          let gameCode= generateGameCode()
          createGame(gameCode)
@@ -47,22 +81,28 @@ function Home() {
       //SEED DATA
       // later i think we can remove the .doc onwards to just create the collections
       // adding a story collection
-      db.collection("games").doc(gc).collection('story').doc('0').set({
-         text: "Once apon a time:", uid: 1, username: "frank", round: 1 
+      await db.collection("games").doc(gc).collection('story').doc('0').set({
+         text: "Once apon a time:", uid: 1, username: "frank", round: 1
       })
-      db.collection("games").doc(gc).collection('sentences').doc('0').set({
-         text: "Once apon a time:", uid: 1, username: "frank", round: 1 
+      await db.collection("games").doc(gc).collection('sentences').doc('0').set({
+         text: "Once apon a time:", uid: 1, username: "frank", round: 1
       })
-      // hacky way to add first user
-      db.collection("games").doc(gc).collection('players').doc('0').set({
-         name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
+      // Add Game Creator as 0 player in the game
+      await db.collection("games").doc(gc).collection('players').doc('0').set({
+         name: userName, score: 0, isArbitrator: false, ready: false, isHost: true, id:userId, position:0})
    }
 
   return (
     <div className="App container">
       <div className="inner">
+        <>
          <h1>Home</h1>
-         <button onClick={_startButtonHandler}> Create a game </button>
+         { user ?
+            <><img src={userPhoto} alt="avatar"/><button onClick={_startButtonHandler}> Create a game </button><Signout /></>
+            : <Signin />
+          }
+        </>
+
       </div>
     </div>
   );
