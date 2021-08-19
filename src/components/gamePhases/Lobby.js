@@ -5,13 +5,12 @@ function Lobby(props) {
          //   useEffect(() => {
          // props.players[props.player]
          //     if (props.player.isHost) {
-      
          //  }}, []);
 
          // Params
-         // onCompletion={handleSubmitOrTimeout} players={players}  playerID={player}
+         // onCompletion={handleSubmitOrTimeout} players={players}  postition={player}
 
-      <div className="lobby container">
+      <div className="lobby phase">
          <div className="inner">
           <h4>Lobby</h4>
           <p>Players:</p>

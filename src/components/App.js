@@ -8,11 +8,9 @@ function App() {
   return (
     <div className="App">
       <Router>
-
-          {/* TODO - seperate nav component. Need to figure out links in child component */}
-          <div className="container">
+          <div className="nav container">
             <div className="inner">
-              <Link to="/">Home</Link> | <Link to="/play">Game</Link>
+              <Link className="logo" to="/">StoryStack</Link>
             </div>  
           </div>
           {/* END TODO  */}

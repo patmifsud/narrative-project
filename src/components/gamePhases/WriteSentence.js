@@ -1,7 +1,8 @@
 import React, { useState} from 'react';
 // import Sentence from '..../helpers/globals.js';
-import SentenceInputForm from '../ui/SentenceInputForm'; 
-import Story from '../ui/Story'; 
+import {Story, SentenceInputForm} from '../ui/gameUi'; 
+import {PhaseBanner} from '../ui/gameUi'; 
+
 
 function WriteSentence(props) {
   const [localSentence, setLocalSentence] = useState('')
@@ -10,24 +11,27 @@ function WriteSentence(props) {
     setLocalSentence(text)
   }
 
+
   // send submition from child SentenceInputForm to 'Sentences' in db
   function handleSubmit(){
-    console.log(localSentence)
+
     props.dbAddSentance({
       'text': localSentence, 
-      'userid': props.player, 
-      'username': 'gerry' })
+      'postition': props.postition, 
+      'username': props.player.name,
+    })
     props.handleSubmitOrTimeout();
   };
   
   return (
-    <div className="writeSentence container">
-      <h4>WriteSentence</h4>
+    <div className="writeSentence phase">
+      <PhaseBanner />
         <div className="inner">
         <Story story={props.story}/>
         <SentenceInputForm 
           onChange={handleTextEntry}
-          onSubmit={handleSubmit}/>
+          onSubmit={handleSubmit}
+          />
       </div>
     </div>
     );

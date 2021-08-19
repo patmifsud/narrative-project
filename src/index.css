@@ -1,9 +1,12 @@
 /* structure and setup */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700;800&display=swap');
+
 
 /* resets */
 *{box-sizing:border-box; margin:0; padding:0; border:0; outline:0; font-size:100%; vertical-align:baseline; background:transparent;}
 div, .container, .nav, .inner {display: block; }
 body, html{ min-height: 100vh;  background: var(--bgCol2); }
+body{padding-bottom:10vh;}
 
 /* variables */
 :root {
@@ -18,7 +21,6 @@ body, html{ min-height: 100vh;  background: var(--bgCol2); }
     --sp7:55px;
     --sp8:70px;
 
-
     /* font size */
     --fonts1: 30px;
     --fonts2: 20px;
@@ -26,26 +28,41 @@ body, html{ min-height: 100vh;  background: var(--bgCol2); }
     --fonts4: 16px;
     --fonts5: 13px;
     --maxTextWidth:800px;
+
     /* color table */
-    --purple1: hsla(274, 17%, 28%, 1);
-    --purple2: hsla(275, 13%, 62%, 1);
-    --yellow1: hsla(47, 100%, 72%, 1);
+    --purple1: rgb(255, 255, 255);
+    --purple2: rgb(184, 184, 184);
+    --green1: #63B57D;
     --yellow2: hsla(47, 100%, 90%, 1);
-    --blue1: hsla(230, 34%, 71%, 1);
-    --blue2: hsla(230, 23%, 92%, 1);
-    --blue3: hsla(230, 42%, 98%, 1);
+    --blue1: rgb(80, 84, 105);
+    --blue2: rgb(56, 56, 58);
+    --blue3: rgb(36, 36, 36);
+
     /* interface colors */
     --mainCol: var(--purple1);
-    --bgCol: white;
-    --bgCol2: var(--blue3);
+    --bgCol: black;
+    --bgCol2: rgb(31, 31, 31);
+    
+    /* player colors */
+    --pl0: #fcd0b7ff;
+    --pl1: #fdecd8ff;
+    --pl2: #c8ebe0ff;
+    --pl3: #7ef0ffff;
+    --pl4: #89b3e6ff;
+    --pl5: hsla(47, 100%, 90%, 1);
+    --pl99:rgb(226, 115, 115); /* error */
+
+    
     /*Misc*/
-    --borderRad:var(--sp3);
+    --borderRad:0;
+    --border: solid 1px var(--mainCol);
+
   }
 
 /* ------------------------- */
 /* structure */
 .container{
-    padding:var(--sp3) var(--sp4);
+    padding:0 var(--sp4);
     background-color: var(--bgCol);
     width: 100%;
 }
@@ -53,25 +70,45 @@ body, html{ min-height: 100vh;  background: var(--bgCol2); }
         margin:0 auto;
         width:100%;
         max-width: 1000px;
-        padding: var(--sp1);
     }
+    .inner.padding{
+      padding:var(--sp3 0);
+  }
 
 .nav{
     position:fixed;
     display: flex;
     width:100%;
+    max-height:10vh;
+    height:100vh;
     background: var(--bgCol);
+    padding-bottom:0;
 }
+  .nav .inner{
+    border-bottom: var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
 .main{
   padding-top:85px;
   height:100%;
 }
 
+.logo{
+  font-family: 'Sarabun', Helvetica, Arial, sans-serif;
+  font-size: var(--fonts4);
 
-p, h1, h2, h3, h4, h5, a, sub, label, .inner{
+}
+
+.home, .game{
+  padding-top:10vh;
+}
+
+p, h1, h2, h3, h4, h5, a, sub, label, .inner, textarea, input{
   color: var(--mainCol);     
-  font-family: Public Sans, Helvetica, Arial, sans-serif;
+  font-family: 'Sarabun', Helvetica, Arial, sans-serif;
   line-height:130%;
 }
 
@@ -113,7 +150,6 @@ small{
 a{
   text-decoration: none;
   cursor: pointer;
-  background: var(--bgCol2);
   margin:0 var(--sp0);
 }
 
@@ -122,7 +158,7 @@ a:hover{
 }
 
 *::selection{
-  background-color: var(--yellow1);
+  background-color: var(--green1);
 }
 
 *::placeholder{
@@ -135,7 +171,7 @@ ul, ol{
 }
 
 .underline{
-  border-bottom: 2px solid var(--yellow1);
+  border-bottom: 2px solid var(--green1);
 }
 
 li{
@@ -156,20 +192,21 @@ color:var(--purple2);
   font-family: monospace;
 }
 
+.noBg{
+  background:none;
+}
 
 form{
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: var(--sp3) 0 0 0;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
 }
-  input[type=text], input[type=password], input[type=email]{
+  input[type=text], input[type=password], input[type=email], textarea{
       background: linear-gradient(180deg, #F8F8FC 0%, #F8F8FC 95.31%, #C1B3CC 97.4%);
-      border-radius: 4px;
+      color: var(--bgCol2);
       width: 100%;
-      max-width:800px;
       padding: var(--sp3) var(--sp2);
-      margin: 0 0 var(--sp4) 0;
   }
 
   label{
@@ -177,17 +214,13 @@ form{
       color: var(--purple2);
   }
 
-
-
 button, input[type=submit], .button{
   display: inline-block;
-  background: var(--bgCol2);
+  background: var(--green1);
   color: var( --mainCol);
   font-size: var( --fonts4);
-  border-radius: 4px;
   padding: var( --sp2) var(--sp4);
   cursor: pointer;
-  margin-right:var( --sp2);
 }
       button.primary, input[type=submit].primary, .button.primary{
       background: var(--purple1);
@@ -197,16 +230,13 @@ button, input[type=submit], .button{
   form input[type=submit], .button.large, button.large{
       font-size: var( --fonts2);
       padding: var( --sp3) var(--sp6);
-      margin: var( --sp3) 0;
   }
 
   .button.medium, button.medium{
     font-size: var( --fonts4);
     padding: var( --sp2) var(--sp4);
-    margin: var( --sp2) 0;
   }
   
-
       .flex-center input, .flex-center .button{
           margin-bottom:0;
           margin-top:0;
@@ -220,7 +250,7 @@ button, input[type=submit], .button{
   }
 
   button:hover, input[type=submit]:hover, .button:hover, card:hover{
-      background: var(--yellow1);
+      background: var(--green1);
       color: var(--purple1);
   }
 

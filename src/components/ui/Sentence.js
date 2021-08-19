@@ -1,13 +1,15 @@
 function Sentence(props) {
 
-   console.log(props.content)
+   console.log(props.content.postition)
 
    return (
-      <div className="sentence">
+      <div className={`sentence pl${props.content.postition}`}>
          <div className="username">{props.content.username}</div>
          {props.content.text}
       </div>
       );
     }
+
+
 
 export default Sentence;

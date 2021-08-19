@@ -5,11 +5,13 @@ function Loading(props) {
 
 
    return (
-      <div className="revealScore container">
+      <div className="revealScore phase">
+        <div className="container largeCenteredText">
          <div className="inner">
-          <h4>Loading</h4>
+          <h1>Loading</h1>
         </div>
       </div>
+    </div>
       );
     }
 

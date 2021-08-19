@@ -1,7 +1,13 @@
-function RevealFinalScore() {
+import React, { useState, useEffect } from 'react';
+function RevealFinalScore(props) {
+
+  useEffect(() => {
+    props.setReadyAfter(3000)
+  }, []);
 
    return (
-      <div className="revealFinalScore container">
+     
+      <div className="revealFinalScore phase">
          <div className="inner">
           <h4>RevealFinalScore</h4>
         </div>

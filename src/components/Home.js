@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { db } from '../services/firebase'
 import { motion } from "framer-motion"
@@ -6,11 +7,8 @@ import firebase from 'firebase'
 
 function Home() {
    const history = useHistory();
+   const [buttonText, setButtonText] = useState('Create a game')
 
-//   function signInWithGoogle(){
-//     const provider = new firebase.auth.GoogleAuthProvider()
-//     auth.signInWithPopup(provider)
-//   }
 
    function _startButtonHandler(){
       // show loading icon on start button
@@ -21,10 +19,10 @@ function Home() {
       // if they are logged in, 
 
          let gameCode= generateGameCode()
+         setButtonText('⏳')
          createGame(gameCode)
       // try to create a game in db with id of 'gameCode'
       // if db returns success, do the following:
-         history.push(`/play/${gameCode}`);
       //if not, error message
    }
 
@@ -32,15 +30,15 @@ function Home() {
       return Math.random().toString(36).substr(2, 5);
    }
 
-   async function createGame(gc) {
+   async function createGame(gameCode) {
     // 5 digits. todo: duplicate testing/ prevention
     // const gc =  generateGameCode()
     // console.log('Game Code:', gc);
 
-      await db.collection("games").doc(gc).set({
-         // players: [{uid:1 ,  }],
-         // sentences: [{ text: "Pizza", uid: 1, round: 1 }],
-         // story: [{ text: "1st Text", uid: 1, round: 1 }],
+      await db.collection("games").doc(gameCode).set({
+         // players: [{postition:1 ,  }],
+         // sentences: [{ text: "Pizza", postition: 1, round: 1 }],
+         // story: [{ text: "1st Text", postition: 1, round: 1 }],
          winningSentence: '',
          roundCounter: 1,
          phase: 'Lobby',
@@ -48,34 +46,35 @@ function Home() {
       })
 
       // during create game if user is not signed in 
-      // 
-
-
-
 
       //SEED DATA
       // later i think we can remove the .doc onwards to just create the collections
       // adding a story collection
-      db.collection("games").doc(gc).collection('story').doc('0').set({
-         text: "Once apon a time:", uid: 1, username: "frank", round: 1 
+      await db.collection("games").doc(gameCode).collection('story').doc('0').set({
+         text: "Once apon a time:", postition: 1, username: "frank", round: 1 
       })
-      db.collection("games").doc(gc).collection('sentences').doc('0').set({
-         text: "Once apon a time:", uid: 1, username: "frank", round: 1 
+      await db.collection("games").doc(gameCode).collection('sentences').doc('0').set({
+         text: "Once apon a time:", postition: 1, username: "frank", round: 1 
       })
       // hacky way to add first user
-      db.collection("games").doc(gc).collection('players').doc('0').set({
-         name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, id:0})
+      await db.collection("games").doc(gameCode).collection('players').doc('0').set({
+         name: "Theo", score: 0, isArbitrator: false, ready: false, isHost: true, postition:0, playerId:0})
+
+      // go to the url for the game. Moved this here so if (hopefully) only executes after fb db has finished
+      history.push(`/play/${gameCode}`);
    }
 
   return (
-    <div className="App container">
-      <div className="inner">
-      <motion.div animate={{ scale: [0.1, 1] }} transition={{ duration: 1 }}>
-         <h1>Home</h1>
-         <button onClick={_startButtonHandler}> Create a game </button>
-      </motion.div>
+   <div>
+      <div className="home container largeCenteredText">
+         <div className="inner">
+         <motion.div animate={{ scale: [0.1, 1] }} transition={{ duration: 1 }}>
+            <h1>Home</h1>
+            <button onClick={_startButtonHandler}> {buttonText}</button>
+         </motion.div>
+         </div>
       </div>
-    </div>
+   </div>
   );
 }
 

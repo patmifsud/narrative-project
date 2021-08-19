@@ -1,13 +1,16 @@
+import React, { useState, useEffect } from 'react';
 
-
-function Intro() {
+function Intro(props) {
+  useEffect(() => {
+    props.setReadyAfter(3000)
+  }, []);
 
    return (
-      <div className="intro container">
+      <div className="intro phase">
+        <div className="container largeCenteredText">
          <div className="inner">
-          <h4>Intro</h4>
-          <p>Intro content will go here</p>
-          
+            <h1>Welcome to StoryStack</h1>
+          </div>
         </div>
       </div>
       );

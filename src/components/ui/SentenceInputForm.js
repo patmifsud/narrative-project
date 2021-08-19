@@ -9,12 +9,14 @@ function SentenceInputForm(props) {
    }
 
    return ( 
-         <div className=" ">
-            <form onSubmit={handleSubmitLocal}>
-               <textarea name="sentence" onChange={(e) => props.onChange(e.target.value)}
-                  placeholder="What happens next?" />
-               <input type="submit" value="Submit" />
-            </form>
+         <div className="container noBg">
+            <div className="inner">
+               <form onSubmit={handleSubmitLocal}>
+                  <textarea name="sentence" onChange={(e) => props.onChange(e.target.value)}
+                     placeholder="What happens next?" />
+                  <input type="submit" value="Submit" />
+               </form>
+            </div>
          </div>
       );
     }
