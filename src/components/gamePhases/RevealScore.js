@@ -14,7 +14,7 @@ import {PhaseBanner} from '../ui/gameUi';
 // clearSentences={dbClearSentances}
 // handleSubmitOrTimeout={handleSubmitOrTimeout}
 
- 
+
 function RevealScore(props) {
   // const player = props.players[props.player]
   useEffect(() => {
